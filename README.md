@@ -4,44 +4,50 @@
 
 This repo includes a very simple application which we want to dockerize and secure.  Security standards should be taken from the [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/index.html) and should pertain to Docker image security only.
 
-## Assignment
+## Prerequisites
 
-Your task is to accomplish the following:
+To run the task on the local machine below are required
 
-- Dockerize the two included applications.
-- Apply OWASP image hardening best practices to both containers.
-- Set up automated local static image scans of the resulting images using a tool like [Snyk](https://snyk.io/).
-- Create a basic Kubernetes deployment for both applications.  The deployment should incorporate any OWASP guidance for running containers.
-- Ensure that all steps (build, scan, and local kubernetes deployment) can be easily performed using the included [task](https://github.com/go-task/task) file.
+- Install Docker on the machine with version 20.10.17 so that image scanner also avialable for security scan
+- Install Task on the machine to execute the tasks which are defined under Taskfile.yml
+- Install Minikube with kubectl on the machine to deploy the services into local cluster 
 
-## Don't Let the Dog Eat Your Homework
+## setup
 
-For delivery of this assignment, we'd like to see:
+To deploy the services into Local cluster, below are the files created with required changes
 
-- Dockerfiles for both included applications with OWASP guidelines applied to the image.
-- A Task in the Taskfile that automates local static image scans of the resulting images.
-- A Kubernetes deployment file that deploys both apps using OWASP runtime guidelines.
-- All work orchestrated through the included Taskfile.yaml, documentation [here](https://taskfile.dev/#/)
+- Created Dockerfile for each service , used multilayer image to seperate build and deployment
+- Created python virtual environment to setup dependencies as per the owsap best practices
+- Created non root user and executed the application with that user as per the owsap best practices
+- Created wsgi.py for each service and used gunicorn http server in Dockerfile as per the owsap best practices
+- Created deployment manifest files for each service to deploy the services into local cluster 
+- Created Taskfile.ym with tasks to execute build, scan , deploy in one go
+- Updated app-b service code to create database with table and rows which are mentioned in schema.sql
+- Updated app-a service code the, result from app_b getting in bytes datatype, it is failing in comparison so converted byte to string
 
-## Bonus Points for Any of the Following
+## Testing:
 
-- Separate build and deploy stages in your Dockerfiles.
-- Automated local Kubernetes environment for testing.
-- Discuss how you would integrate regular scans into a CI pipeline, along with any caveats.
-- Discuss how you would expose and secure this application publicly on Kubernetes.
+## Build and Deploy Setup:
 
-Create a new repo using your Github account with a unique name and send us the final product!
+- Create seperate branches for each enviornment like develop-dev-env, release-qa-env, etc..
+- Enable webhook on the repo , so that when ever changes are pushed to particular branch corresponding job will be triggered
+- in the build process, add the steps 
+- pull the latest code
+- run the unit test cases, if any test cases are failed fail the job and send email communication to the team
+- run the security scan of the images , fail the job if any vunerbilities are found and sned email communication to the team
+- tag the image and store the image in to registry if above validations are passed
+- in the deployment process
+- connect to the cluster and deploy the mainfest files to cluster
+- mainfest file should contain deployment and service objects 
+- add all the stages in the pipeline of jenkins and create job with the pipeline
+
+## secure applicatoin
+
+- Restrict API service access by integrating with LDAP 
+- Use RBAC and create Roles and Rolebinding on cluster object level to limit the access of objects for users
+- Expose frontend services only and restrict backend services expose outside by using clusterip 
 
 
-## Notes
-
-- Please do not fork or submit a PR to this repo.
-- Please document your thought-processes and use well-written git commit messages to show your progress.
-- Feel free to change the python application and its requirements in any way you see fit.
-- We are purposefully not being overly prescriptive in this assignment, as we want you to think creatively about the solution.
-- This assignment should take less than 5 hours to complete.
-- If you get stuck or need more information, please reach out for clarity.
-- Have fun!
 
 ## Getting Started in Local Development
 
