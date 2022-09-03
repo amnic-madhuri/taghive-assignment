@@ -18,9 +18,9 @@ To run the task on the local machine below are required
 To deploy the services into Local cluster, below are the files created with required changes
 
 - Created Dockerfile for each service , used multilayer image to seperate build and deployment
-- Created python virtual environment to setup dependencies as per the owsap best practices
-- Created non root user and executed the application with that user as per the owsap best practices
-- Created wsgi.py for each service and used gunicorn http server in Dockerfile as per the owsap best practices
+- Created python virtual environment to setup dependencies as per the owasp best practices
+- Created non root user and executed the application with that user as per the owasp best practices
+- Created wsgi.py for each service and used gunicorn http server in Dockerfile as per the owasp best practices
 - Created deployment manifest files for each service to deploy the services into local cluster 
 - Created Taskfile.ym with tasks to execute build, scan , deploy in one go
 - Updated app-b service code to create database with table and rows which are mentioned in schema.sql
@@ -46,7 +46,7 @@ To deploy the services into Local cluster, below are the files created with requ
 - in the build process, add the steps 
 - pull the latest code
 - run the unit test cases, if any test cases are failed fail the job and send email communication to the team
-- run the security scan of the images , fail the job if any vunerbilities are found and sned email communication to the team
+- run the security scan of the images , fail the job if any vunerbilities are found and send email communication to the team
 - tag the image and store the image in to registry if above validations are passed
 - in the deployment process
 - connect to the cluster and deploy the mainfest files to cluster
