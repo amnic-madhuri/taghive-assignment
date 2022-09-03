@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-b-deployment
+  labels:
+    app: app-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-b
+  template:
+    metadata:
+      labels:
+        app: app-b
+    spec:
+      containers:
+      - name: app-b
+        image: app-b-image:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5001
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: app-b-service
+spec:
+  selector:
+    app: app-b
+  ports:
+  - protocol: TCP
+    port: 5001
+    nodePort: 30002
+  type: NodePort
