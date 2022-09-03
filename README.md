@@ -11,8 +11,9 @@ To run the task on the local machine below are required
 - Install Docker on the machine with version 20.10.17 so that image scanner also avialable for security scan
 - Install Task on the machine to execute the tasks which are defined under Taskfile.yml
 - Install Minikube with kubectl on the machine to deploy the services into local cluster 
+- Update the hostip in app_a.py file
 
-## setup
+## Setup
 
 To deploy the services into Local cluster, below are the files created with required changes
 
@@ -26,6 +27,17 @@ To deploy the services into Local cluster, below are the files created with requ
 - Updated app-a service code the, result from app_b getting in bytes datatype, it is failing in comparison so converted byte to string
 
 ## Testing:
+- Images list in Minikube(app-a-image:v1 and app-b-image:v1)
+![minikube-images](https://user-images.githubusercontent.com/107679119/188269934-4e01e608-748c-4d39-96e6-296e32e8125f.png)
+
+- Security Scan Repot of Local image
+![image-security-scan](https://user-images.githubusercontent.com/107679119/188269977-2a136580-3863-49d0-aa90-7e90ab7f470c.png)
+
+- After deployment, cluster components(deployment, pods, replicaset and service for both serviecs)
+![cluster-components](https://user-images.githubusercontent.com/107679119/188270009-70af795a-90df-44c2-a15a-77b62cb9e07e.png)
+
+- Testing of serviecs
+![app-test](https://user-images.githubusercontent.com/107679119/188270039-049faa73-6bed-478d-bac4-5a2e7d198904.png)
 
 ## Build and Deploy Setup:
 
@@ -41,7 +53,7 @@ To deploy the services into Local cluster, below are the files created with requ
 - mainfest file should contain deployment and service objects 
 - add all the stages in the pipeline of jenkins and create job with the pipeline
 
-## secure applicatoin
+## Secure Applicatoin
 
 - Restrict API service access by integrating with LDAP 
 - Use RBAC and create Roles and Rolebinding on cluster object level to limit the access of objects for users
@@ -62,13 +74,13 @@ task run-app
 Making a request
 
 ```bash
-curl http://127.0.0.1:5000/hello
+curl http://HostIP:30001/hello
 
-curl -X POST -H 'Authorization: mytoken' http://127.0.0.1:5000/jobs
+curl -X POST -H 'Authorization: mytoken' http://HostIP:30001/jobs
 ```
 
 Simulating a lot of requests
 
 ```bash
-ab -m POST -H "Authorization: mytoken" -n 500 -c 4 http://127.0.0.1:5000/jobs
+ab -m POST -H "Authorization: mytoken" -n 500 -c 4 http://HostIP:30001/jobs
 ```
