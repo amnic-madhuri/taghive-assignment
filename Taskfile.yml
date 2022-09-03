@@ -1,18 +1,31 @@
----
-
 version: '3'
 
-output: prefixed
-
 tasks:
-
   run-app:
-    deps: [app-a, app-b]
+    deps: [build, security-scan, deploy]
 
-  app-a:
+  build:
     cmds:
-      - python apps/app_a/app_a.py
+     - cd apps/app_a && sudo docker build -t app-a-image:v1 .
+     - cd apps/app_b && sudo docker build -t app-b-image:v1 .   
 
-  app-b:
+  security-scan:
     cmds:
-      - python apps/app_b/app_b.py
+     - sudo docker scan -f ./apps/app_a/Dockerfile app-a-image:v1 --severity high 
+     - sudo docker scan -f ./apps/app_b/Dockerfile app-b-image:v1 --severity high
+    ignore_error: true 
+
+  deploy:
+    cmds:
+     - cd apps/app_a && minikube image build -t app-a-image:v1 .
+     - kubectl apply -f app-a-deploy.yml
+     - cd apps/app_b && minikube image build -t app-b-image:v1 .
+     - kubectl apply -f app-b-deploy.yml
+
+  test:
+    cmds:
+     - curl http://192.168.59.100:30001/hello
+     - curl -X POST -H 'Authorization: mytoken' http://192.168.59.100:30001/jobs 
+
+
+
