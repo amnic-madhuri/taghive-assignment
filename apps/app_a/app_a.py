@@ -12,7 +12,8 @@ def hello():
 def jobs():
     token = request.headers['Authorization']
     data = {"token": token}
-    result = requests.post('http://0.0.0.0:5001/auth', data=data).content
+    output = requests.post('http://192.168.59.100:30002/auth', data=data).content
+    result = output.decode()
     if result == "density":
         return 'Jobs:\nTitle: Devops\nDescription: Awesome\n'
     else:
